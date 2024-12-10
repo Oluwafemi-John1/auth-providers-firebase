@@ -36,7 +36,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { firebaseConfig } from './config.js'
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-        import { getDatabase } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -84,11 +84,21 @@
                     time: new Date().toLocaleTimeString()
                 }
                 console.log(payload);
-                
+                let dbRef = ref(database, `todos/${Date.now()}`)
+                set(dbRef, payload)
             }
         }
         window.signIn = signIn
         window.submitTodo = submitTodo
+
+        let newRef = ref(database, 'todos')
+        onValue(newRef,(snapshot)=>{
+            const data = snapshot.val()
+            console.log(data);
+        })
+
+        console.log(Date.now());
+        
     </script>
 </body>
 
